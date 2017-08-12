@@ -1,5 +1,5 @@
 const Cliente = require("../models/cliente");
-const {defaultTo, prop} = require("ramda");
+const {defaultTo, prop, clone} = require("ramda");
 
 const createCliente = ( req, res, next ) => {
 
@@ -39,9 +39,21 @@ const getOneClient = ( req, res, next ) => {
 
 }
 
+const updateCliente =  ( req, res, next ) => {
+    const id = prop("id", req.params);
+    const cliente = clone(req.body);
+
+    Cliente.findByIdAndUpdate(id, cliente)
+    .then( updatedClient =>  updatedClient._id )
+    .then(getClienteByID)
+    .then( c => res.json(c))
+    .catch( error => next(error) )
+
+}
 
 module.exports = {
     createCliente,
     getClientes,
-    getOneClient
+    getOneClient,
+    updateCliente
 }
