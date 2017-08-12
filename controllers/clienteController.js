@@ -14,6 +14,15 @@ const createCliente = ( req, res, next ) => {
 
 }
 
+const getClientes = (req, res, next ) => {
+    
+    Cliente.find({})
+    .then( clientes => res.json(clientes) )
+    .catch( error => next(error) )
+
+}
+
 module.exports = {
-    createCliente
+    createCliente,
+    getClientes
 }
