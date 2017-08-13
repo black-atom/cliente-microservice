@@ -51,9 +51,45 @@ const updateCliente =  ( req, res, next ) => {
 
 }
 
+const removeEndereco =  ( req, res, next ) => {
+    const clienteId = prop("clienteId", req.params);
+    const enderecoId = prop("enderecoId", req.params);
+
+    getClienteByID(clienteId)
+    .then( cliente => {
+
+        cliente.enderecos.id(enderecoId).remove();
+        return cliente.save();
+
+    })
+    .then( () => res.send() )
+    .catch( error => next(error) )
+
+}
+
+const removeContato =  ( req, res, next ) => {
+    const clienteId = prop("clienteId", req.params);
+    const contatoID = prop("contatoId", req.params);
+
+    getClienteByID(clienteId)
+    .then( cliente => {
+
+        cliente.contatos.id(contatoID).remove();
+        return cliente.save();
+
+    })
+    .then( () => res.send() )
+    .catch( error => next(error) )
+
+}
+
+
+
 module.exports = {
     createCliente,
     getClientes,
     getOneClient,
-    updateCliente
+    updateCliente,
+    removeEndereco,
+    removeContato
 }
