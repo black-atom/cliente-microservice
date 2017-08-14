@@ -1,5 +1,6 @@
 const {Schema} = require("mongoose");
 const timestamps = require('mongoose-timestamp');
+const dbConnection = require('../databaseConnection');
 
 const enderecoSchema  = new Schema({
     rua: {type: String, required: [true, "Entre com o nome da rua e numero"]},
@@ -47,4 +48,4 @@ const clienteSchema = new Schema({
 clienteSchema.plugin(timestamps);
 
 
-module.exports = db.model("clientes", clienteSchema);
+module.exports = dbConnection.model("clientes", clienteSchema);

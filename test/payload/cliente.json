@@ -1,0 +1,62 @@
+{
+    "clienteUpdate": {
+        "cnpj_cpf": "42892311880",
+        "razao_social": "Realponto",
+        "nome": "Realponto",
+        "nome_fantasia": "Realponto",
+        "inscricao_estadual": "Realponto",
+        "enderecos": 
+        [{
+            "rua": "Rua Dr Cincinato Braga",
+            "complemento": "296",
+            "bairro": "São Paulo",
+            "estado": "SP",
+            "cidade": "São Bernardo do Campo",
+            "cep": "12355"
+        },
+        {
+            "rua": "Rua Dr Cincinato Braga",
+            "complemento": "296",
+            "bairro": "São Paulo",
+            "estado": "SP",
+            "cidade": "São Bernardo do Campo",
+            "cep": "12355"
+        }
+        ],
+        "contatos": 
+        [{
+            "telefone": "312232",
+            "nome": "teste"
+        }]
+    },
+    "clienteNew": {
+        "cnpj_cpf": "47389876589",
+        "razao_social": "Realponto",
+        "nome": "Realponto",
+        "nome_fantasia": "Realponto",
+        "inscricao_estadual": "Realponto",
+        "enderecos": 
+        [{
+            "rua": "Rua Dr Cincinato Braga",
+            "complemento": "296",
+            "bairro": "São Paulo",
+            "estado": "SP",
+            "cidade": "São Bernardo do Campo",
+            "cep": "12355"
+        },
+        {
+            "rua": "Rua Dr Cincinato Braga",
+            "complemento": "296",
+            "bairro": "São Paulo",
+            "estado": "SP",
+            "cidade": "São Bernardo do Campo",
+            "cep": "12355"
+        }
+        ],
+        "contatos": 
+        [{
+            "telefone": "312232",
+            "nome": "teste"
+        }]
+    }
+}
