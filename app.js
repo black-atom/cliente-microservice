@@ -4,6 +4,7 @@ const favicon = require('serve-favicon');
 const logger = require('morgan');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
+const cors = require('cors');
 
 const db = require("./databaseConnection");
 
@@ -12,6 +13,8 @@ const clienteRoute = require('./routes/clienteRoute');
 
 const app = express();
 
+//enable cors
+app.use(cors());
 // view engine setup
 app.set('view engine', 'jade');
 
