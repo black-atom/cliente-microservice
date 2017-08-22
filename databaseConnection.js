@@ -1,18 +1,19 @@
 const mongoose = require('mongoose');
 const bluebird = require('bluebird');
 const { isNil } = require("ramda");
-const databaseConfig = require("./config/database")();
+const dbConfig = require("./config/databaseConfig")();
 
 let db = null;
 
-const  defaultOpt = {
-    db: { native_parser: true },
-    server: { poolSize: 10 },
-    promiseLibrary: bluebird,
+let options = {
+  db: { native_parser: true },
+  server: { poolSize: 10 },
+  promiseLibrary: bluebird,
+  user: dbConfig.username,
+  pass: dbConfig.password
 }
 
-
-mongoose.connect(databaseConfig.url , defaultOpt);
+mongoose.connect(dbConfig.url, options);
 mongoose.Promise = bluebird;
 
 db = mongoose.connection;

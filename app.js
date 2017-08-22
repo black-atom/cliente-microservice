@@ -5,7 +5,7 @@ const logger = require('morgan');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 const jwt = require('express-jwt');
-
+const authConfig = require('./config/authConfig')();
 const cors = require('cors');
 
 const db = require("./databaseConnection");
@@ -15,10 +15,11 @@ const clienteRoute = require('./routes/clienteRoute');
 
 const app = express();
 
-app.use(jwt({secret: 'realponto'}));
-
-
+if( !authConfig.bypass ){
+	app.use("/api", jwt({secret: authConfig.secret }));
+}
 app.use(cors());
+
 app.set('view engine', 'jade');
 
 // uncomment after placing your favicon in /public
