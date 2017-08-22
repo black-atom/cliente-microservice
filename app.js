@@ -4,8 +4,9 @@ const favicon = require('serve-favicon');
 const logger = require('morgan');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
-var jwt = require('express-jwt');
+const jwt = require('express-jwt');
 
+const cors = require('cors');
 
 const db = require("./databaseConnection");
 
@@ -16,7 +17,8 @@ const app = express();
 
 app.use(jwt({secret: 'realponto'}));
 
-// view engine setup
+
+app.use(cors());
 app.set('view engine', 'jade');
 
 // uncomment after placing your favicon in /public
