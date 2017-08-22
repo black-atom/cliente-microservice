@@ -4,6 +4,8 @@ const favicon = require('serve-favicon');
 const logger = require('morgan');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
+var jwt = require('express-jwt');
+
 
 const db = require("./databaseConnection");
 
@@ -11,6 +13,8 @@ const clienteRoute = require('./routes/clienteRoute');
 
 
 const app = express();
+
+app.use(jwt({secret: 'realponto'}));
 
 // view engine setup
 app.set('view engine', 'jade');
