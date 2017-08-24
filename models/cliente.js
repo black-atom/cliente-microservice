@@ -7,7 +7,7 @@ const enderecoSchema  = new Schema({
     complemento: { type: String, default: "" },
     bairro: {type: String, required: [true, "Entre com o bairro"]},
     cidade: {type: String, required: [true, "Entre com a cidade"]},
-    estado: {type: String, required: [true, "Entre com os dados do estado"]},
+    uf: {type: String, required: [true, "Entre com os dados do estado"]},
     ponto_referencia: { type: String, default: "" },
     cep: {type: String, required: [true, "Entre com o cep"]}
 })
