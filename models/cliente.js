@@ -16,6 +16,7 @@ const enderecoSchema  = new Schema({
 
 const contatoSchema  = new Schema({
     email: { type: String, default: "" },
+    celular: { type: String, default: "" },
     telefone: {type: String, required: [true, "Entre com o telefone de contato!"]},
     nome: {type: String, required: [true, "Entre com o nome para contato!"]},
     observacao: { type: String, default: "" },
