@@ -15,13 +15,26 @@ const clienteRoute = require('./routes/clienteRoute');
 
 const app = express();
 
-if( !authConfig.bypass ){
-	app.use("/api", jwt({secret: authConfig.secret }), (err, req, res, next) => {
-		if (err.name === 'UnauthorizedError') { 
-			return(res.status(401).send('Invalid authorization token'));
-		}
-	});
-}
+app.use("/api", 
+  jwt({
+    secret: authConfig.secret,
+    credentialsRequired: authConfig.bypass
+  }), 
+  (err, req, res, next) => {
+    if (err.name === 'UnauthorizedError') { 
+      return(res.status(401).send('Invalid authorization token'));
+    }
+  }
+);
+
+app.use("/api", (req, res, next) => {
+  if(req.body){
+    req.body.createdBy = req.user || 'Ambiente de Test';
+    req.body.updatedBy = req.user || 'Ambiente de Test';
+  }
+  next();
+})
+
 app.use(cors());
 
 app.set('view engine', 'jade');

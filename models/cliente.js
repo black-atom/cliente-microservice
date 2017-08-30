@@ -1,6 +1,8 @@
 const {Schema} = require("mongoose");
 const timestamps = require('mongoose-timestamp');
 const dbConnection = require('../databaseConnection');
+const userAudit = require('mongoose-useraudit-plugin');
+
 
 const enderecoSchema  = new Schema({
     rua: {type: String, required: [true, "Entre com o nome da rua e numero"]},
@@ -21,15 +23,11 @@ const contatoSchema  = new Schema({
 
 const clienteSchema = new Schema({
 
-    razao_social: {
-        type: String,
-        default: ""
-    },
     cnpj_cpf: {
         type: String, 
         required: [true, "Entre com o cnpj/cpf do cliente"]
     },
-    nome: {
+    nome_razao_social: {
         type: String, 
         required: [true, "Entre com o nome  do Cliente"]
     },
@@ -46,6 +44,7 @@ const clienteSchema = new Schema({
 }, { versionKey: false });
 
 clienteSchema.plugin(timestamps);
+clienteSchema.plugin(userAudit);
 
 
 module.exports = dbConnection.model("clientes", clienteSchema);
