@@ -55,6 +55,14 @@ const baseUri = "/api";
 app.use(baseUri, clienteRoute);
 
 
+
+app.use((err, req, res, next) => {
+	if(err.name === 'MongoError'){
+		res.status = 500;
+	}
+	next();
+})
+
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   const err = new Error('Not Found');
