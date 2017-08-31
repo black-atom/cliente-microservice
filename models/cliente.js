@@ -6,6 +6,7 @@ const userAudit = require('mongoose-useraudit-plugin');
 
 const enderecoSchema  = new Schema({
     rua: {type: String, required: [true, "Entre com o nome da rua e numero"]},
+    numero: {type: String, required: [true, "Entre com o numero"]},
     complemento: { type: String, default: "" },
     bairro: {type: String, required: [true, "Entre com o bairro"]},
     cidade: {type: String, required: [true, "Entre com a cidade"]},
