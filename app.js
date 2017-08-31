@@ -18,21 +18,25 @@ const app = express();
 app.use("/api", 
   jwt({
     secret: authConfig.secret,
-    credentialsRequired: authConfig.bypass
+    credentialsRequired: !authConfig.bypass
   }), 
   (err, req, res, next) => {
     if (err.name === 'UnauthorizedError') { 
       return(res.status(401).send('Invalid authorization token'));
     }
+    next();
   }
 );
 
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false }));
+
 app.use("/api", (req, res, next) => {
-  if(req.body){
-    req.body.createdBy = req.user || 'Ambiente de Test';
-    req.body.updatedBy = req.user || 'Ambiente de Test';
-  }
-  next();
+
+  req.body.createdBy = req.user || 'Ambiente de Test';
+  req.body.updatedBy = req.user || 'Ambiente de Test';
+  
+   next();
 })
 
 app.use(cors());
@@ -42,8 +46,6 @@ app.set('view engine', 'jade');
 // uncomment after placing your favicon in /public
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 app.use(logger('dev'));
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 
 
