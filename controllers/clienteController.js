@@ -8,10 +8,19 @@ const createCliente = ( req, res, next ) => {
     cliente.enderecos = defaultTo([], prop("enderecos", req.body));
     cliente.contatos = defaultTo([], prop("contatos", req.body));
 
-    const clienteInstance = new Cliente(cliente);
-    clienteInstance.save()
-    .then( c => res.json(c))
-    .catch( error => next(error))
+    getClienteByCPNJ(cliente.cnpj_cpf).then(foundCliente =>{
+        if(foundCliente===null){
+            const clienteInstance = new Cliente(cliente);
+            clienteInstance.save()
+            .then( c => res.json(c))
+            .catch( error => next(error))
+        }else{
+            const error = new Error("Erro na insercao");
+            error.name ="ValidationError";
+            error.status = 409;
+            next(error);
+        }
+    }).catch( error => next(error))
 
 }
 
