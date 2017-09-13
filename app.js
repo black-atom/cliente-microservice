@@ -33,8 +33,8 @@ app.use(bodyParser.urlencoded({ extended: false }));
 
 app.use("/api", (req, res, next) => {
 
-  req.body.createdBy = req.user || 'Ambiente de Test';
-  req.body.updatedBy = req.user || 'Ambiente de Test';
+  req.body.createdBy = (req.user && req.user._doc.login.username) ? req.user._doc.login.username : 'Ambiente de Test';
+  req.body.updatedBy = (req.user && req.user._doc.login.username) ? req.user._doc.login.username : 'Ambiente de Test';
   
    next();
 })
@@ -74,11 +74,12 @@ app.use(function(req, res, next) {
 app.use(function(err, req, res, next) {
   // set locals, only providing error in development
   res.locals.message = err.message;
-  res.locals.error = req.app.get('env') === 'development' ? err : {};
+  res.locals.error = req.app.get('env') === 'development' ? err : err;
 
+  console.error(err.stack || err)
   // render the error page
   res.status(err.status || 500);
-  res.send(res.locals.error);
+  res.json(res.locals.error);
 });
 
 module.exports = app;
