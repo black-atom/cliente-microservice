@@ -1,13 +1,10 @@
 const Cliente = require("../models/cliente");
 const {defaultTo, prop, clone} = require("ramda");
+const formatClient = require('../utils/clienteSpec');
 
 const createCliente = ( req, res, next ) => {
-
-    const cliente = defaultTo({}, req.body);
-
-    cliente.enderecos = defaultTo([], prop("enderecos", req.body));
-    cliente.contatos = defaultTo([], prop("contatos", req.body));
-
+  
+    const cliente = formatClient(req.body);
     getClienteByCPNJ(cliente.cnpj_cpf).then(foundCliente =>{
         if(foundCliente===null){
             const clienteInstance = new Cliente(cliente);
@@ -50,7 +47,7 @@ const getOneClient = ( req, res, next ) => {
 
 const updateCliente =  ( req, res, next ) => {
     const id = prop("id", req.params);
-    const cliente = clone(req.body);
+    const cliente = formatClient(req.body);
 
     Cliente.findByIdAndUpdate(id, cliente)
     .then( updatedClient =>  updatedClient._id )
