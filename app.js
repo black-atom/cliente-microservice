@@ -35,8 +35,9 @@ app.use("/api", (req, res, next) => {
 
   req.body.createdBy = (req.user && req.user._doc.login.username) ? req.user._doc.login.username : 'Ambiente de Test';
   req.body.updatedBy = (req.user && req.user._doc.login.username) ? req.user._doc.login.username : 'Ambiente de Test';
+  req.login = (req.user && req.user._doc.login) ? req.user._doc.login : {};
 
-   next();
+  next();
 })
 
 app.use(cors());
