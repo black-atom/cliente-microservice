@@ -25,8 +25,8 @@ const createCliente = ( req, res, next ) => {
 }
 
 const getClientes = (req, res, next ) => {
-    
-    Cliente.find({})
+
+    Cliente.find({}, {_id: 1, cnpj_cpf: 1, nome_razao_social: 1, "contatos.telefone": 1 })
     .then( clientes => res.json(clientes) )
     .catch( error => next(error) )
 
@@ -50,12 +50,10 @@ const getOneClient = ( req, res, next ) => {
 
 const updateCliente =  ( req, res, next ) => {
     const id = prop("id", req.params);
-    const cliente = clone(req.body);
+    const clienteData = clone(req.body);
 
-    Cliente.findByIdAndUpdate(id, cliente)
-    .then( updatedClient =>  updatedClient._id )
-    .then(getClienteByID)
-    .then( c => res.json(c))
+    Cliente.findByIdAndUpdate(id, clienteData, {new: true})
+    .then( cliente => res.json(cliente))
     .catch( error => next(error) )
 
 }
