@@ -751,9 +751,9 @@ mongoose-timestamp@^0.6.0:
   dependencies:
     defaults "^1.0.3"
 
-mongoose-useraudit-plugin@^0.1.0:
-  version "0.1.0"
-  resolved "https://registry.yarnpkg.com/mongoose-useraudit-plugin/-/mongoose-useraudit-plugin-0.1.0.tgz#5d51bffc9ad184b1bc4e65167fdc5e3958b02880"
+mongoose-useraudit-plugin@0.2.0:
+  version "0.2.0"
+  resolved "https://registry.yarnpkg.com/mongoose-useraudit-plugin/-/mongoose-useraudit-plugin-0.2.0.tgz#9d769fc368f157679a72e63bab67f7ae0191e507"
 
 mongoose@4.10.8:
   version "4.10.8"

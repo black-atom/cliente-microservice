@@ -15,13 +15,13 @@ const clienteRoute = require('./routes/clienteRoute');
 
 const app = express();
 
-app.use("/api", 
+app.use("/api",
   jwt({
     secret: authConfig.secret,
     credentialsRequired: !authConfig.bypass
-  }), 
+  }),
   (err, req, res, next) => {
-    if (err.name === 'UnauthorizedError') { 
+    if (err.name === 'UnauthorizedError') {
       return(res.status(401).send('Invalid authorization token'));
     }
     next();
@@ -35,8 +35,9 @@ app.use("/api", (req, res, next) => {
 
   req.body.createdBy = (req.user && req.user._doc.login.username) ? req.user._doc.login.username : 'Ambiente de Test';
   req.body.updatedBy = (req.user && req.user._doc.login.username) ? req.user._doc.login.username : 'Ambiente de Test';
-  
-   next();
+  req.login = (req.user && req.user._doc.login) ? req.user._doc.login : {};
+
+  next();
 })
 
 app.use(cors());
@@ -57,8 +58,10 @@ app.use(baseUri, clienteRoute);
 
 
 app.use((err, req, res, next) => {
-	if(err.name === 'MongoError'){
-		err.status = 500;
+	switch(err.name){
+    case 'ValidationError':{
+        err.status = 422;
+    }
 	}
 	next(err);
 })
@@ -79,7 +82,7 @@ app.use(function(err, req, res, next) {
   console.error(err.stack || err)
   // render the error page
   res.status(err.status || 500);
-  res.json(res.locals.error);
+  res.json(err);
 });
 
 module.exports = app;

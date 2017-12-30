@@ -20,7 +20,7 @@
     "mocha": "^3.5.0",
     "mongoose": "4.10.8",
     "mongoose-timestamp": "^0.6.0",
-    "mongoose-useraudit-plugin": "^0.1.0",
+    "mongoose-useraudit-plugin": "0.2.0",
     "morgan": "~1.8.1",
     "ramda": "^0.24.1",
     "serve-favicon": "~2.4.2"
