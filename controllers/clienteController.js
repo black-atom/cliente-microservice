@@ -1,6 +1,6 @@
 const Cliente = require("../models/cliente");
 const {defaultTo, prop, clone} = require("ramda");
-
+const Promise = require('bluebird');
 const createCliente = ( req, res, next ) => {
 
     const cliente = defaultTo({}, req.body);
@@ -26,10 +26,47 @@ const createCliente = ( req, res, next ) => {
 
 const getClientes = (req, res, next ) => {
 
-    Cliente.find({}, {_id: 1, cnpj_cpf: 1, nome_razao_social: 1, "contatos.telefone": 1 })
-    .then( clientes => res.json(clientes) )
-    .catch( error => next(error) )
+    const limit = parseInt(req.query.limit);
+  const skip = parseInt(req.query.skip);
 
+    let search = JSON.parse(req.query.search);
+    for(key in search){
+      let valor = search[key];
+      if(key !== "createdBy"){
+        valor = new RegExp(''+ valor +'', "i")
+      }
+      search = {
+        ...search,
+        [key]: valor
+      }
+    }
+  
+
+    if (skip && limit) {
+      Promise.all([
+        Cliente.find(search, {_id: 1, cnpj_cpf: 1, nome_razao_social: 1, "contatos.telefone": 1 }).sort( { createdBy: -1 } )
+          .skip(skip)
+          .limit(limit)
+          .exec(),
+        Cliente.find(search).count().exec()
+      ])
+        .spread((clientes, count) => {
+          res.json(200, { clientes, count });
+        })
+        .catch(error => next(error));
+    } else {
+      Promise.all([
+        Cliente.find(search, {_id: 1, cnpj_cpf: 1, nome_razao_social: 1, "contatos.telefone": 1 }).sort( { createdBy: -1 } )
+          .limit(limit)
+          .exec(),
+        Cliente.find(search).count().exec()
+      ])
+        .spread((clientes, count) => {
+          res.json(200, { clientes, count });
+        })
+        .catch(error => next(error));
+    }
+  
 }
 
 const getClienteByID = (id) =>  Cliente.findById(id);
