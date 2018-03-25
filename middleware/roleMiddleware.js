@@ -1,4 +1,4 @@
-const authConfig = require('../config/authConfig');
+const authConfig = require('../config/authConfig')();
 
 const roleMiddlware = (roles = ['administrador']) => (req, res, next) => {
 
