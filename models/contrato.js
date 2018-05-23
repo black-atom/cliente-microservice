@@ -32,8 +32,6 @@ const clienteSchema = new Schema({
   nome_razao_social  : { type: String, required: [true, "Entre com o nome  do Cliente"]    },
   nome_fantasia      : { type: String, required: [true, "Entre com o cnpj/cpf do cliente"] },
   inscricao_estadual : { type: String, required: [true, "Entre com o nome  do Cliente"]    },
-  endereco           : enderecoSchema,
-  contato            : contatoSchema,
 })
 
 const equipamentoSchema  = new Schema({
@@ -57,6 +55,8 @@ const propostaSchema  = new Schema({
 
 const contratoSchema = new Schema({
   cliente           : clienteSchema,
+  endereco          : enderecoSchema,
+  contato           : contatoSchema,
   dataAdessao       : { type: Schema.Types.Date, required: [true, "Entre com a data de adessão"], default: new Date() },
   dataEncerramento  : { type: Schema.Types.Date, default: null  },
   valor             : { type: Number, default: 0, required: [true, "Entre com informação da visita!"]                 },
