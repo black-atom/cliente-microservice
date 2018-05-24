@@ -1,5 +1,6 @@
-const Contrato = require("../models/contrato");
+const { equals, difference } = require('ramda');
 const Promise = require('bluebird');
+const Contrato = require("../models/contrato");
 
 const createContrato = ( req, res, next ) => {
   const contratoNovo = new Contrato(req.body);
@@ -10,11 +11,36 @@ const createContrato = ( req, res, next ) => {
 
 const updateContrato =  ( req, res, next ) => {
   const id = req.params.id;
-  const contratoData = req.body;
 
-  Contrato.findByIdAndUpdate(id, contratoData, { new: true })
-  .then( contrato => res.json(contrato))
-  .catch( error => next(error) )
+  Contrato.findById(id)
+  .then(contrato => {
+    const contratoRaw = contrato.toObject();
+    const reqBody  = req.body;
+
+    let findPropostaAtivaContrato = contratoRaw.propostas.find(proposta => proposta.ativo)
+
+    let findPropostaAtivaReqBody = reqBody.propostas.find(proposta => proposta.ativo)
+    delete findPropostaAtivaReqBody.id;
+
+    let propostaCompare = equals(findPropostaAtivaContrato, findPropostaAtivaReqBody);
+    let propostas;
+
+    if(!propostaCompare) {
+    const newProposta = { ...findPropostaAtivaReqBody };
+    const propostaBefore = {...findPropostaAtivaContrato, ativo: false};
+    propostas = [...contratoRaw.propostas.map(p => p.id === propostaBefore.id ? propostaBefore : p), newProposta];
+    };
+
+    const contratoCliente = {
+      ...contrato,
+      propostas
+    }
+
+    Contrato.findByIdAndUpdate(id, contratoCliente, { new: true })
+      .then( contrato => res.json(contrato))
+      .catch( error => next(error) )
+  })
+  .catch( error => next(error) );
 
 }
 
