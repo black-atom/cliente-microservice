@@ -32,15 +32,16 @@ const clienteSchema = new Schema({
   nome_razao_social  : { type: String, required: [true, "Entre com o nome  do Cliente"]    },
   nome_fantasia      : { type: String, required: [true, "Entre com o cnpj/cpf do cliente"] },
   inscricao_estadual : { type: String, required: [true, "Entre com o nome  do Cliente"]    },
-})
+}, { versionKey: false })
 
 const equipamentoSchema  = new Schema({
   modelo        : { type: String, default: "", required: [true, "Entre com o modelo!"]                 },
+  fabricante    : { type: String, default: "", required: [true, "Entre com o fabricante!"]                 },
   numeroSerie   : { type: String, default: ""                                                          },
   visita        : { type: Boolean, default: false, required: [true, "Entre com informação da visita!"] },
   valor         : { type: Number, default: 0, required: [true, "Entre com valor equipamento!"]         },
   endereco      : enderecoSchema,
-})
+}, { versionKey: false })
 
 
 const propostaSchema  = new Schema({
@@ -50,19 +51,20 @@ const propostaSchema  = new Schema({
   criadoEm       : { type: Schema.Types.Date, required: [true, "Entre com a data de encerramento"], default: new Date() },
   encerradoEm    : { type: Schema.Types.Date, default: null       },
   ativo          : { type: Boolean, default: true, required: [true, "Situação da proposta!"]                            },
-})
+}, { versionKey: false })
 
 
 const contratoSchema = new Schema({
   cliente           : clienteSchema,
   endereco          : enderecoSchema,
   contato           : contatoSchema,
+  tipo              : { type: String, enum: ['Anual', 'Mensal', 'Semestral', 'Trimestral'], default: 'Mensal' },
   dataAdessao       : { type: Schema.Types.Date, required: [true, "Entre com a data de adessão"], default: new Date() },
   dataEncerramento  : { type: Schema.Types.Date, default: null  },
   valor             : { type: Number, default: 0, required: [true, "Entre com informação da visita!"]                 },
   propostas         : [propostaSchema],
   ativo             : { type: Boolean, default: true, required: [true, "Situação do contrato!"]                       },
-})
+}, { versionKey: false })
 
 contratoSchema.plugin(timestamps);
 contratoSchema.plugin(userAudit);

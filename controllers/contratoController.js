@@ -11,36 +11,46 @@ const createContrato = ( req, res, next ) => {
 
 const updateContrato =  ( req, res, next ) => {
   const id = req.params.id;
+  const novoContrato  = req.body;
 
-  Contrato.findById(id)
-  .then(contrato => {
-    const contratoRaw = contrato.toObject();
-    const reqBody  = req.body;
+  const findContratoByID = id => Contrato.findById(id)
 
-    let findPropostaAtivaContrato = contratoRaw.propostas.find(proposta => proposta.ativo)
-
-    let findPropostaAtivaReqBody = reqBody.propostas.find(proposta => proposta.ativo)
-    delete findPropostaAtivaReqBody.id;
-
-    let propostaCompare = equals(findPropostaAtivaContrato, findPropostaAtivaReqBody);
-    let propostas;
+  const updateContrato = contrato => {
+    const findPropostaAtivaContrato = contrato.propostas.find(proposta => proposta.ativo)
+    const findPropostaAtivaReqBody = novoContrato.propostas.find(proposta => proposta.ativo)
+    const propostaCompare = equals(findPropostaAtivaContrato, findPropostaAtivaReqBody);
 
     if(!propostaCompare) {
-    const newProposta = { ...findPropostaAtivaReqBody };
-    const propostaBefore = {...findPropostaAtivaContrato, ativo: false};
-    propostas = [...contratoRaw.propostas.map(p => p.id === propostaBefore.id ? propostaBefore : p), newProposta];
+      contrato.propostas = contrato.propostas.map(proposta => {
+        if(proposta.id === findPropostaAtivaReqBody._id){
+          proposta.ativo = false;
+          return proposta
+        }
+        return proposta
+      })
     };
 
-    const contratoCliente = {
-      ...contrato,
-      propostas
-    }
+    delete findPropostaAtivaReqBody._id;
+    contrato.valor = findPropostaAtivaReqBody.valor;
+    contrato.propostas.push(findPropostaAtivaReqBody);
 
-    Contrato.findByIdAndUpdate(id, contratoCliente, { new: true })
-      .then( contrato => res.json(contrato))
-      .catch( error => next(error) )
-  })
-  .catch( error => next(error) );
+    return contrato.save({ new: true })
+  }
+
+  const areContatosEqual = contrato => {
+    let contratoRaw = JSON.parse(JSON.stringify(contrato));
+    const areContratosEqual = equals(contratoRaw, novoContrato);
+
+    return areContratosEqual ? contratoRaw : updateContrato(contrato)
+  }
+
+  const sendContrato = contrato => res.json(contrato)
+
+  Promise.resolve(id)
+    .then(findContratoByID)
+    .then(areContatosEqual)
+    .then(sendContrato)
+    .catch( error => next(error));
 
 }
 
@@ -56,7 +66,7 @@ const getContratos = (req, res, next ) => {
 
   const limit = req.query.limit ? parseInt(req.query.limit) : 0;
   const skip = req.query.skip ? parseInt(req.query.skip) : 0;
-  const sort = req.query.sort ? parseInt(req.query.sort) : { createdAt: -1 };
+  const sort = { createdAt: -1 };
   const resultContrato = {
     _id: 1, 
     'cliente.cnpj_cpf': 1, 
