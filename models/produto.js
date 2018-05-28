@@ -15,7 +15,7 @@ const produtoSchema = new Schema({
   categoria: { type: String, enum: ["acessório","catraca", "relógio", "peça", "software"], required: [true, "Entre com a categoria!"] },
   pecas: [pecaSchema],
   valor: { type: Number, required: [true, "Entre com o valor do produto"], default: 0 },
-  imagemURL: { type: String, required: [true, "Entre com a imagem valor do produto"], default: null },
+  imagemURL: { type: String, default: null },
 }, { versionKey: false });
 
 produtoSchema.plugin(timestamps);
