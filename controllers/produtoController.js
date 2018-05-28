@@ -15,19 +15,16 @@ const getProdutos = (req, res, next ) => {
   const limit = req.query.limit ? parseInt(req.query.limit) : 0;
   const skip = req.query.skip ? parseInt(req.query.skip) : 0;
   const sort = { createdAt: -1 };
-
   let search = req.query.search ? JSON.parse(req.query.search) : {};
-
+  
   const parseQueryRegExp = valor => new RegExp(''+ valor +'', 'i');
-
-    for(prop in search) {
-      let valor = search[prop];
-      search = {
-        ...search,
-        [prop]: parseQueryRegExp(valor)
-      }
+  for(key in search){
+    let valor =  new RegExp(''+ search[key] +'', "i");
+    search = {
+      ...search,
+      [key]: valor
     }
-
+  }
     Promise.all([
       Produto.find(search).sort(sort).skip(skip).limit(limit).exec(),
       Produto.find(search).count().exec()
