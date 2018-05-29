@@ -12,7 +12,7 @@ const produtoSchema = new Schema({
   modelo: { type: String, required: [true, "Entre com modelo do produto"] },
   descricao: { type: String, required: [true, "Entre com modelo do produto"] },
   marca: { type: String, required: [true, "Entre com modelo do produto"] },
-  categoria: { type: String, enum: ["acessório","catraca", "relógio", "peça", "software"], required: [true, "Entre com a categoria!"] },
+  categoria: { type: String, enum: ["acessório","catraca", "acionador", "controle de acesso","relógio", "peça", "software"], required: [true, "Entre com a categoria!"] },
   pecas: [pecaSchema],
   valor: { type: Number, required: [true, "Entre com o valor do produto"], default: 0 },
   imagemURL: { type: String, default: null },
