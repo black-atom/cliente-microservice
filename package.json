@@ -22,8 +22,11 @@
     "mongoose-timestamp": "^0.6.0",
     "mongoose-useraudit-plugin": "0.2.0",
     "morgan": "~1.8.1",
+    "multer": "^1.3.0",
+    "multer-google-storage": "https://github.com/vitorsilvalima/multer-google-storage",
     "photon-authorization-middleware": "^1.0.2",
     "ramda": "^0.24.1",
-    "serve-favicon": "~2.4.2"
+    "serve-favicon": "~2.4.2",
+    "uuid": "^3.2.1"
   }
 }
