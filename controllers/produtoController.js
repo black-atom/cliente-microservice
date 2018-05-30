@@ -48,9 +48,30 @@ const updateProduto =  ( req, res, next ) => {
     .catch( error => next(error) )
 }
 
+const uploadImagemProduto =  ( req, res, next ) => {
+
+  const id = req.params.id;
+  const imagemURL = req.file.path;
+
+  const produtoFind = Produto.findById(id)
+  const produtoParse = produto => JSON.parse(JSON.stringify(produto));
+  const newProduto = produto => ({...produto, imagemURL });
+  const updateProduto = produto => Produto.findByIdAndUpdate(id, produto, { new: true });
+  const sendProduto = produto => res.json(produto);
+
+  Promise.resolve(id)
+    .then(produtoFind)
+    .then(produtoParse)
+    .then(newProduto)
+    .then(updateProduto)
+    .then(sendProduto)
+    .catch( error => next(error) )
+}
+
 module.exports = {
   createProduto,
   getProdutos,
   getProduto,
   updateProduto,
+  uploadImagemProduto
 }
