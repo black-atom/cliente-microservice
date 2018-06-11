@@ -13,25 +13,25 @@ const enderecoSchema  = new Schema({
     cep               : { type: String, required: [true, "Entre com o cep"]                  },
     ponto_referencia  : { type: String, default: ""                                          },
     complemento       : { type: String, default: ""                                          },
-  }, 
-  { 
-    _id: false 
+  },
+  {
+    _id: false
   }
 )
 
 const contatoSchema  = new Schema({
-  email       : { type: String, required: [true, "Entre com o email!"]    },
-  celular     : { type: String, required: [true, "Entre com o celular!"]  },
-  telefone    : { type: String, required: [true, "Entre com o telefone!"] },
-  nome        : { type: String, required: [true, "Entre com o nome!"]     },
-  observacao  : { type: String, default: ""                               },
+  email: { type: String, default: "" },
+  celular: { type: String, default: "" },
+  telefone: {type: String, default: "" },
+  nome: {type: String, default: "" },
+  observacao: { type: String, default: "" },
 }, { _id: false })
 
 const clienteSchema = new Schema({
   cnpj_cpf           : { type: String, required: [true, "Entre com o cnpj/cpf do cliente"] },
   nome_razao_social  : { type: String, required: [true, "Entre com o nome  do Cliente"]    },
-  nome_fantasia      : { type: String, required: [true, "Entre com o cnpj/cpf do cliente"] },
-  inscricao_estadual : { type: String, required: [true, "Entre com o nome  do Cliente"]    },
+  nome_fantasia      : { type: String, default: "" },
+  inscricao_estadual : { type: String, default: "" },
 }, { versionKey: false })
 
 const equipamentoSchema  = new Schema({
