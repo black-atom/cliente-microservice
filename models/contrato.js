@@ -64,6 +64,7 @@ const financeiroSchema =  new Schema({
 
 const contratoSchema = new Schema({
   cliente           : clienteSchema,
+  cnpjAssociados    : [clienteSchema],
   endereco          : enderecoSchema,
   contato           : contatoSchema,
   tipo              : { type: String, enum: ['Anual', 'Mensal', 'Semestral', 'Trimestral'], default: 'Mensal' },
