@@ -35,6 +35,8 @@ const clienteSchema = new Schema({
 }, { versionKey: false })
 
 const equipamentoSchema  = new Schema({
+  descricao        : { type: String, default: "", required: [true, "Entre com o descricao!"]                 },
+  categoria        : { type: String, default: "", required: [true, "Entre com o categoria!"]                 },
   modelo        : { type: String, default: "", required: [true, "Entre com o modelo!"]                 },
   fabricante    : { type: String, default: "", required: [true, "Entre com o fabricante!"]                 },
   numeroSerie   : { type: String, default: ""                                                          },

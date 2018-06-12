@@ -74,6 +74,8 @@ const getContratos = (req, res, next ) => {
     ativo: 1,
     dataAdessao: 1,
     dataEncerramento: 1,
+    valor: 1, 
+    tipo: 1,
   };
 
   let search = req.query.search ? JSON.parse(req.query.search) : {};
