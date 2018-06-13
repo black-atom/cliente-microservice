@@ -12,25 +12,39 @@ const enderecoSchema  = new Schema({
     cep               : { type: String, required: [true, 'Entre com o cep']                  },
     ponto_referencia  : { type: String, default: ''                                          },
     complemento       : { type: String, default: ''                                          },
-  }, 
-  { 
-    _id: false 
+  },
+  {
+    _id: false
   }
 )
 
 const contatoSchema  = new Schema({
   email       : { type: String, required: [true, 'Entre com o email!']    },
-  celular     : { type: String, required: [true, 'Entre com o celular!']  },
+  celular     : { type: String, default: '' },
   telefone    : { type: String, required: [true, 'Entre com o telefone!'] },
   nome        : { type: String, required: [true, 'Entre com o nome!']     },
-  observacao  : { type: String, default: ''                               },
 }, { _id: false })
 
+
+const enderecoProdutoSchema  = new Schema({
+  rua               : { type: String, default: '' },
+  numero            : { type: String, default: '' },
+  bairro            : { type: String, default: '' },
+  cidade            : { type: String, default: '' },
+  uf                : { type: String, default: '' },
+  cep               : { type: String, default: '' },
+  ponto_referencia  : { type: String, default: '' },
+  complemento       : { type: String, default: '' },
+},
+{
+  _id: false
+}
+)
 const clienteSchema = new Schema({
   cnpj_cpf           : { type: String, required: [true, 'Entre com o cnpj/cpf do cliente'] },
   nome_razao_social  : { type: String, required: [true, 'Entre com o nome  do Cliente']    },
-  nome_fantasia      : { type: String, required: [true, 'Entre com o cnpj/cpf do cliente'] },
-  inscricao_estadual : { type: String, required: [true, 'Entre com o nome  do Cliente']    },
+  nome_fantasia      : { type: String, default: '' },
+  inscricao_estadual : { type: String, default: ''    },
 }, { versionKey: false })
 
 const equipamentoSchema  = new Schema({
@@ -41,7 +55,7 @@ const equipamentoSchema  = new Schema({
   numeroSerie   : { type: String, default: ''                                                             },
   visita        : { type: Boolean, default: false, required: [true, 'Entre com informação da visita!']    },
   valor         : { type: Number, default: 0, required: [true, 'Entre com valor equipamento!']            },
-  endereco      : enderecoSchema,
+  endereco      : enderecoProdutoSchema,
 }, { versionKey: false })
 
 
@@ -54,7 +68,7 @@ const propostaSchema  = new Schema({
   ativo          : { type: Boolean, default: true, required: [true, 'Situação da proposta!']                            },
 }, { versionKey: false })
 
-const financeiroSchema =  new Schema({     
+const financeiroSchema =  new Schema({
   descricao   : { type: String, default: ''                                                                           },
   valor       : { type: Number, default: 0, required: [true, 'Entre com o valor!']                                    },
   mesVigente  : { type: String, default: '', required: [true, 'Entre com mes de vencimento!']                         },
