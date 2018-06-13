@@ -64,7 +64,7 @@ const financeiroSchema =  new Schema({
 
 const contratoSchema = new Schema({
   cliente           : clienteSchema,
-  cnpjAssociados    : [clienteSchema],
+  // cnpjAssociados    : [clienteSchema],
   endereco          : enderecoSchema,
   contato           : contatoSchema,
   tipo              : { type: String, enum: ['Anual', 'Mensal', 'Semestral', 'Trimestral'], default: 'Mensal' },
@@ -72,7 +72,7 @@ const contratoSchema = new Schema({
   dataEncerramento  : { type: Schema.Types.Date, default: null  },
   valor             : { type: Number, default: 0, required: [true, 'Entre com informação da visita!']                 },
   propostas         : [propostaSchema],
-  financeiro        : [financeiroSchema],
+  // financeiro        : [financeiroSchema],
   ativo             : { type: Boolean, default: true, required: [true, 'Situação do contrato!']                       },
 }, { versionKey: false })
 
