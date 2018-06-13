@@ -79,4 +79,5 @@ const contratoSchema = new Schema({
 contratoSchema.plugin(timestamps);
 contratoSchema.plugin(userAudit);
 
+
 module.exports = dbConnection.model('contratos', contratoSchema);
