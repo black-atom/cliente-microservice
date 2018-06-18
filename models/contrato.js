@@ -72,7 +72,7 @@ const financeiroSchema =  new Schema({
   descricao   : { type: String, default: ''                                                                           },
   valor       : { type: Number, default: 0, required: [true, 'Entre com o valor!']                                    },
   mesVigente  : { type: String, default: '', required: [true, 'Entre com mes de vencimento!']                         },
-  status      : { type: String, enum: ['Pago', 'Aberto', 'Aguardando', 'Pendente', 'Cancelado'], default: 'Aberto'                 },
+  status      : { type: String, enum: ['Pago', 'Aberto', 'Aguardando', 'Pendente', 'Cancelado'], default: 'Aberto'    },
   observacao  : { type: String, default: ''                                                                           },
 })
 
@@ -81,6 +81,7 @@ const contratoSchema = new Schema({
   cnpjAssociados    : [clienteSchema],
   endereco          : enderecoSchema,
   contato           : contatoSchema,
+  numeroComtrato    : { type: Number, required: [true, 'Entre com o número do contrato.'] },
   tipo              : { type: String, enum: ['Anual', 'Mensal', 'Semestral', 'Trimestral'], default: 'Mensal' },
   dataAdessao       : { type: Schema.Types.Date, required: [true, 'Entre com a data de adessão'], default: new Date() },
   dataEncerramento  : { type: Schema.Types.Date, default: null  },
