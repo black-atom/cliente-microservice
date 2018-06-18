@@ -68,13 +68,13 @@ const getContratos = (req, res, next ) => {
   const skip = req.query.skip ? parseInt(req.query.skip) : 0;
   const sort = { createdAt: -1 };
   const resultContrato = {
-    _id: 1, 
-    'cliente.cnpj_cpf': 1, 
-    'cliente.nome_razao_social': 1, 
+    _id: 1,
+    'cliente.cnpj_cpf': 1,
+    'cliente.nome_razao_social': 1,
     ativo: 1,
-    dataAdessao: 1,
+    dataAdesao: 1,
     dataEncerramento: 1,
-    valor: 1, 
+    valor: 1,
     tipo: 1,
   };
 
