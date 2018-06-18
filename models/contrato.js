@@ -81,7 +81,7 @@ const contratoSchema = new Schema({
   cnpjAssociados    : [clienteSchema],
   endereco          : enderecoSchema,
   contato           : contatoSchema,
-  numeroComtrato    : { type: Number, required: [true, 'Entre com o número do contrato.'] },
+  numeroContrato    : { type: Number, required: [true, 'Entre com o número do contrato.'] },
   tipo              : { type: String, enum: ['Anual', 'Mensal', 'Semestral', 'Trimestral'], default: 'Mensal' },
   dataAdessao       : { type: Schema.Types.Date, required: [true, 'Entre com a data de adessão'], default: new Date() },
   dataEncerramento  : { type: Schema.Types.Date, default: null  },
