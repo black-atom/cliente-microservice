@@ -69,11 +69,11 @@ const propostaSchema  = new Schema({
 }, { versionKey: false })
 
 const financeiroSchema =  new Schema({
-  descricao   : { type: String, default: ''                                                                           },
-  valor       : { type: Number, default: 0, required: [true, 'Entre com o valor!']                                    },
-  mesVigente  : { type: String, default: '', required: [true, 'Entre com mes de vencimento!']                         },
-  status      : { type: String, enum: ['Pago', 'Aberto', 'Aguardando', 'Pendente', 'Cancelado'], default: 'Aberto'    },
-  observacao  : { type: String, default: ''                                                                           },
+  descricao         : { type: String, default: ''                                                                           },
+  valor             : { type: Number, default: 0, required: [true, 'Entre com o valor!']                                    },
+  mesVigente        : { type: String, default: '', required: [true, 'Entre com mes de vencimento!']                         },
+  status            : { type: String, enum: ['Pago', 'Aberto', 'Aguardando', 'Pendente', 'Cancelado'], default: 'Aberto'    },
+  observacao        : { type: String, default: ''                                                                           },
 })
 
 const contratoSchema = new Schema({
@@ -82,8 +82,10 @@ const contratoSchema = new Schema({
   endereco          : enderecoSchema,
   contato           : contatoSchema,
   numeroContrato    : { type: Number, required: [true, 'Entre com o número do contrato.'] },
+  diaVencimento     : { type: Number, required: [true, 'Entre com o dia do vencimento de pagemento do contrato.'] },
+  subsequente       : { type: Boolean, required: [true, 'Entre com o valor de subsequente.'] },
   tipo              : { type: String, enum: ['Anual', 'Mensal', 'Semestral', 'Trimestral'], default: 'Mensal' },
-  dataAdessao       : { type: Schema.Types.Date, required: [true, 'Entre com a data de adessão'], default: new Date() },
+  dataAdesao        : { type: Schema.Types.Date, required: [true, 'Entre com a data de adessão'], default: new Date() },
   dataEncerramento  : { type: Schema.Types.Date, default: null  },
   valor             : { type: Number, default: 0, required: [true, 'Entre com informação da visita!']                 },
   propostas         : [propostaSchema],
