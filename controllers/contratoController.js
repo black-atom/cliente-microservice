@@ -73,6 +73,7 @@ const getContratos = (req, res, next ) => {
     'cliente.nome_razao_social': 1,
     ativo: 1,
     dataAdesao: 1,
+    numeroContrato: 1,
     dataEncerramento: 1,
     valor: 1,
     tipo: 1,
