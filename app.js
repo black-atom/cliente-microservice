@@ -12,7 +12,8 @@ const cors = require('cors');
 const db = require("./databaseConnection");
 
 const clienteRoute = require('./routes/clienteRoute');
-
+const contratoRoute = require('./routes/contratoRoute');
+const produtoRoute = require('./routes/produtoRoute');
 
 const app = express();
 
@@ -36,8 +37,8 @@ app.use(cookieParser());
 const baseUri = "/api";
 
 app.use(baseUri, clienteRoute);
-
-
+app.use(baseUri, contratoRoute);
+app.use(baseUri, produtoRoute);
 
 app.use((err, req, res, next) => {
 	switch(err.name){

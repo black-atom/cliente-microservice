@@ -2,9 +2,16 @@ FROM node:alpine
 
 MAINTAINER Vitor Silva Lima <vitor.lima2@fatec.sp.gov.br>
 
+RUN apk add --no-cache --update tzdata git
+ENV TZ=America/Sao_Paulo
+RUN rm -rf /var/cache/apk/*
+
 ADD . /usr/src/app
 
 WORKDIR /usr/src/app
+
+RUN rm -rf .git
+RUN git init
 
 ENV NODE_ENV="production"
 ENV DB_USERNAME=""
