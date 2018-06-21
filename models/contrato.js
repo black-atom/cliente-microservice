@@ -81,7 +81,7 @@ const contratoSchema = new Schema({
   cnpjAssociados    : [clienteSchema],
   endereco          : enderecoSchema,
   contato           : contatoSchema,
-  numeroContrato    : { type: Number, required: [true, 'Entre com o número do contrato.'] },
+  numeroContrato    : { type: String, required: [true, 'Entre com o número do contrato.'] },
   diaVencimento     : { type: Number, required: [true, 'Entre com o dia do vencimento de pagemento do contrato.'] },
   subsequente       : { type: Boolean, required: [true, 'Entre com o valor de subsequente.'] },
   tipo              : { type: String, enum: ['Anual', 'Mensal', 'Semestral', 'Trimestral'], default: 'Mensal' },
