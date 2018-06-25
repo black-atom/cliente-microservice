@@ -98,22 +98,22 @@ const getContratos = (req, res, next ) => {
 
   const parseQueryRegExp = valor => new RegExp(''+ valor +'', 'i');
 
-    for(prop in search) {
-      let valor = search[prop];
-      if(prop.indexOf('data') > - 1 !== true){
-        valor = parseQueryRegExp(valor);
-      }
-      search = {
-        ...search,
-        [prop]: valor
-      }
+  for(prop in search) {
+    let valor = search[prop];
+    if(prop.indexOf('data') > - 1 !== true){
+      valor = parseQueryRegExp(valor);
     }
-    Promise.all([
-      Contrato.find(search, resultContrato).sort(sort).skip(skip).limit(limit).exec(),
-      Contrato.find(search).count().exec()
-    ])
-    .spread((contratos, count) => res.json(200, { contratos, count }))
-    .catch(error => next(error));
+    search = {
+      ...search,
+      [prop]: valor
+    }
+  }
+  Promise.all([
+    Contrato.find(search, resultContrato).sort(sort).skip(skip).limit(limit).exec(),
+    Contrato.find(search).count().exec()
+  ])
+  .spread((contratos, count) => res.json(200, { contratos, count }))
+  .catch(error => next(error));
 }
 
 module.exports = {
