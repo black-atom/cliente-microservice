@@ -1,4 +1,4 @@
-const { equals, difference } = require('ramda');
+const { equals } = require('ramda');
 const Promise = require('bluebird');
 const Contrato = require("../models/contrato");
 
@@ -9,39 +9,55 @@ const createContrato = ( req, res, next ) => {
     .catch( error => next(error))
 }
 
-const updateContrato =  ( req, res, next ) => {
+const updateContrato = (contratoAntigo, novoContrato) => {
+  const propostaAtivaDoContratoAntigo = contratoAntigo.propostas.find(proposta => proposta.ativo)
+  const propostaNova = novoContrato.propostas.find(proposta => proposta.ativo)
+
+  const propostaCompare = equals(propostaAtivaDoContratoAntigo, propostaNova);
+
+  if (!propostaCompare) {
+    contratoAntigo.propostas = contratoAntigo.propostas.map(proposta => {
+      if (proposta.id === propostaNova._id) {
+        proposta.encerradoEm = new Date();
+        proposta.ativo = false;
+        proposta.descricao = propostaNova.descricao;
+        return proposta
+      }
+      return proposta
+    })
+
+    delete  propostaNova.descricao;
+  };
+
+  delete propostaNova._id;
+  contratoAntigo.propostas.push(propostaNova);
+
+  contratoAntigo.cnpjAssociados = novoContrato.cnpjAssociados || contratoAntigo.cnpjAssociados;
+  contratoAntigo.contato = novoContrato.contato || contratoAntigo.contato;
+  contratoAntigo.numeroContrato = novoContrato.numeroContrato || contratoAntigo.numeroContrato;
+  contratoAntigo.resumoContrato = novoContrato.resumoContrato || contratoAntigo.resumoContrato;
+  contratoAntigo.diaVencimento = novoContrato.diaVencimento || contratoAntigo.diaVencimento;
+  contratoAntigo.subsequente = novoContrato.subsequente;
+  contratoAntigo.tipo = novoContrato.tipo || contratoAntigo.tipo;
+  contratoAntigo.dataAdesao = novoContrato.dataAdesao || contratoAntigo.dataAdesao;
+  contratoAntigo.dataEncerramento = novoContrato.dataEncerramento || contratoAntigo.dataEncerramento;
+  contratoAntigo.valor = novoContrato.valor || contratoAntigo.valor;
+  contratoAntigo.ativo = novoContrato.ativo;
+
+  return contratoAntigo.save({ new: true })
+}
+
+const updateContratoReq =  ( req, res, next ) => {
   const id = req.params.id;
   const novoContrato  = req.body;
 
   const findContratoByID = id => Contrato.findById(id)
 
-  const updateContrato = contrato => {
-    const findPropostaAtivaContrato = contrato.propostas.find(proposta => proposta.ativo)
-    const findPropostaAtivaReqBody = novoContrato.propostas.find(proposta => proposta.ativo)
-    const propostaCompare = equals(findPropostaAtivaContrato, findPropostaAtivaReqBody);
-
-    if(!propostaCompare) {
-      contrato.propostas = contrato.propostas.map(proposta => {
-        if(proposta.id === findPropostaAtivaReqBody._id){
-          proposta.ativo = false;
-          return proposta
-        }
-        return proposta
-      })
-    };
-
-    delete findPropostaAtivaReqBody._id;
-    contrato.valor = findPropostaAtivaReqBody.valor;
-    contrato.propostas.push(findPropostaAtivaReqBody);
-
-    return contrato.save({ new: true })
-  }
-
   const areContatosEqual = contrato => {
     let contratoRaw = JSON.parse(JSON.stringify(contrato));
     const areContratosEqual = equals(contratoRaw, novoContrato);
 
-    return areContratosEqual ? contratoRaw : updateContrato(contrato)
+    return areContratosEqual ? contratoRaw : updateContrato(contrato, novoContrato)
   }
 
   const sendContrato = contrato => res.json(contrato)
@@ -51,7 +67,6 @@ const updateContrato =  ( req, res, next ) => {
     .then(areContatosEqual)
     .then(sendContrato)
     .catch( error => next(error));
-
 }
 
 const getContrato = ( req, res, next ) => {
@@ -66,7 +81,7 @@ const getContratos = (req, res, next ) => {
 
   const limit = req.query.limit ? parseInt(req.query.limit) : 0;
   const skip = req.query.skip ? parseInt(req.query.skip) : 0;
-  const sort = { createdAt: -1 };
+  const sort = { numeroContrato: -1 };
   const resultContrato = {
     _id: 1,
     'cliente.cnpj_cpf': 1,
@@ -103,7 +118,7 @@ const getContratos = (req, res, next ) => {
 
 module.exports = {
   createContrato,
-  updateContrato,
+  updateContrato: updateContratoReq,
   getContratos,
   getContrato,
 }
