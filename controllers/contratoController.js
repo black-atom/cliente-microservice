@@ -66,7 +66,7 @@ const getContratos = (req, res, next ) => {
 
   const limit = req.query.limit ? parseInt(req.query.limit) : 0;
   const skip = req.query.skip ? parseInt(req.query.skip) : 0;
-  const sort = { createdAt: -1 };
+  const sort = { numeroContrato: -1 };
   const resultContrato = {
     _id: 1,
     'cliente.cnpj_cpf': 1,
@@ -83,22 +83,22 @@ const getContratos = (req, res, next ) => {
 
   const parseQueryRegExp = valor => new RegExp(''+ valor +'', 'i');
 
-    for(prop in search) {
-      let valor = search[prop];
-      if(prop.indexOf('data') > - 1 !== true){
-        valor = parseQueryRegExp(valor);
-      }
-      search = {
-        ...search,
-        [prop]: valor
-      }
+  for(prop in search) {
+    let valor = search[prop];
+    if(prop.indexOf('data') > - 1 !== true){
+      valor = parseQueryRegExp(valor);
     }
-    Promise.all([
-      Contrato.find(search, resultContrato).sort(sort).skip(skip).limit(limit).exec(),
-      Contrato.find(search).count().exec()
-    ])
-    .spread((contratos, count) => res.json(200, { contratos, count }))
-    .catch(error => next(error));
+    search = {
+      ...search,
+      [prop]: valor
+    }
+  }
+  Promise.all([
+    Contrato.find(search, resultContrato).sort(sort).skip(skip).limit(limit).exec(),
+    Contrato.find(search).count().exec()
+  ])
+  .spread((contratos, count) => res.json(200, { contratos, count }))
+  .catch(error => next(error));
 }
 
 module.exports = {
