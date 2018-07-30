@@ -116,7 +116,31 @@ const getContratos = (req, res, next ) => {
   .catch(error => next(error));
 }
 
+const averageContratos = (req, res, next) => {
+
+  const { ativo =  true, dateFrom = null, dateTo = null } = req.query;
+  const ativoParse = status => status === 'true' || status === true ? true : false;
+  let query =  { $match: { ativo: ativoParse(ativo) }};
+  
+  (dateFrom && dateTo) 
+  ? query  = { $match: { ativo: ativoParse(ativo), 'dataAdesao': { $gte: dateFrom, $lt: dateTo }}}
+  : query;
+
+  const averageContrato = query => 
+    Contrato.aggregate([ query, { $group: { _id: '$cust_id', total: { $sum: '$valor' }}}]);
+
+  const countContrato = () => Contrato.find({ ativo: ativoParse(ativo) }).count();
+  const sendAverageContrato = contrato => res.json(contrato);
+
+  Promise.all([ averageContrato(query), countContrato() ])
+    .spread((contratos, count) => res.json(200, {...contratos[0], count }))
+    .catch(error => next(error));
+}
+
+
+
 module.exports = {
+  averageContratos,
   createContrato,
   updateContrato: updateContratoReq,
   getContratos,
