@@ -95,6 +95,7 @@ const contratoSchema = new Schema({
   propostas         : [propostaSchema],
   financeiro        : [financeiroSchema],
   ativo             : { type: Boolean, default: true, required: [true, 'Situação do contrato!']                        },
+  deletedAt         : { type: Date, default: null }
 }, { versionKey: false, usePushEach: true })
 
 contratoSchema.plugin(timestamps);

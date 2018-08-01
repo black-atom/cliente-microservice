@@ -9,6 +9,18 @@ const createContrato = ( req, res, next ) => {
     .catch( error => next(error))
 }
 
+const deleteContrato = ( req, res, next ) => {
+  const id = req.params.id;
+
+  Contrato.findById(id)
+    .then(contrato => {
+      contrato.deletedAt = new Date();
+      return contrato.save()
+    })
+    .then(() => res.send(true))
+    .catch( error => next(error) )
+}
+
 const updateContrato = (contratoAntigo, novoContrato) => {
   const propostaAtivaDoContratoAntigo = contratoAntigo.propostas.find(proposta => proposta.ativo)
   const propostaNova = novoContrato.propostas.find(proposta => proposta.ativo)
@@ -108,6 +120,11 @@ const getContratos = (req, res, next ) => {
       [prop]: valor
     }
   }
+
+  if(!search.hasOwnProperty('deletedAt')) {
+    search.deletedAt = null
+  }
+
   Promise.all([
     Contrato.find(search, resultContrato).sort(sort).skip(skip).limit(limit).exec(),
     Contrato.find(search).count().exec()
@@ -127,8 +144,8 @@ const averageContratos = async(req, res, next) => {
     const ativo = ativoQuery === 'true' ? true : false
   
     const match = (dateFrom && dateTo)
-      ? { ativo, dataAdesao: { $gte: dateFrom, $lt: dateTo }}
-      : { ativo };
+      ? { ativo, deletedAt: null, dataAdesao: { $gte: dateFrom, $lt: dateTo }}
+      : { ativo, deletedAt: null };
   
     const summaryQuery = await Contrato.aggregate([
       {
@@ -177,4 +194,5 @@ module.exports = {
   updateContrato: updateContratoReq,
   getContratos,
   getContrato,
+  deleteContrato,
 }
