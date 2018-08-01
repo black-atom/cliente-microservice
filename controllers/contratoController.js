@@ -116,25 +116,57 @@ const getContratos = (req, res, next ) => {
   .catch(error => next(error));
 }
 
-const averageContratos = (req, res, next) => {
-
-  const { ativo =  true, dateFrom = null, dateTo = null } = req.query;
-  const ativoParse = status => status === 'true' || status === true ? true : false;
-  let query =  { $match: { ativo: ativoParse(ativo) }};
+const averageContratos = async(req, res, next) => {
+  try {
+    const {
+      ativo: ativoQuery,
+      dateFrom,
+      dateTo,
+    } = req.query;
+    
+    const ativo = ativoQuery === 'true' ? true : false
   
-  (dateFrom && dateTo) 
-  ? query  = { $match: { ativo: ativoParse(ativo), 'dataAdesao': { $gte: dateFrom, $lt: dateTo }}}
-  : query;
+    const match = (dateFrom && dateTo)
+      ? { ativo, dataAdesao: { $gte: dateFrom, $lt: dateTo }}
+      : { ativo };
+  
+    const summaryQuery = await Contrato.aggregate([
+      {
+        $match: match
+      },
+      {
+        $group: {
+          _id: null,
+          maxValue: { $max: '$valor' },
+          minValue: { $min: '$valor' },
+          count: { $sum: 1 },
+          total: { $sum: '$valor' },
+        }
+      },
+      {
+        $project: {
+          _id: 0,
+          maxValue: 1,
+          minValue: 1,
+          total: 1,
+          count: 1,
+          total: 1,
+        }
+      }
+    ])
+    
+    const [ summary = {
+      maxValue: 0,
+      minValue: 0,
+      total: 0,
+      count: 0,
+      total: 0,
+    }] = summaryQuery;
 
-  const averageContrato = query => 
-    Contrato.aggregate([ query, { $group: { _id: '$cust_id', total: { $sum: '$valor' }}}]);
-
-  const countContrato = () => Contrato.find({ ativo: ativoParse(ativo) }).count();
-  const sendAverageContrato = contrato => res.json(contrato);
-
-  Promise.all([ averageContrato(query), countContrato() ])
-    .spread((contratos, count) => res.json(200, {...contratos[0], count }))
-    .catch(error => next(error));
+    res.json(summary)
+  } catch(error){
+    next(error)
+  }
 }
 
 
