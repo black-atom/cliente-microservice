@@ -98,25 +98,81 @@ const getContratos = (req, res, next ) => {
 
   const parseQueryRegExp = valor => new RegExp(''+ valor +'', 'i');
 
-    for(prop in search) {
-      let valor = search[prop];
-      if(prop.indexOf('data') > - 1 !== true){
-        valor = parseQueryRegExp(valor);
-      }
-      search = {
-        ...search,
-        [prop]: valor
-      }
+  for(prop in search) {
+    let valor = search[prop];
+    if(prop.indexOf('data') > - 1 !== true){
+      valor = parseQueryRegExp(valor);
     }
-    Promise.all([
-      Contrato.find(search, resultContrato).sort(sort).skip(skip).limit(limit).exec(),
-      Contrato.find(search).count().exec()
-    ])
-    .spread((contratos, count) => res.json(200, { contratos, count }))
-    .catch(error => next(error));
+    search = {
+      ...search,
+      [prop]: valor
+    }
+  }
+  Promise.all([
+    Contrato.find(search, resultContrato).sort(sort).skip(skip).limit(limit).exec(),
+    Contrato.find(search).count().exec()
+  ])
+  .spread((contratos, count) => res.json(200, { contratos, count }))
+  .catch(error => next(error));
 }
 
+const averageContratos = async(req, res, next) => {
+  try {
+    const {
+      ativo: ativoQuery,
+      dateFrom,
+      dateTo,
+    } = req.query;
+    
+    const ativo = ativoQuery === 'true' ? true : false
+  
+    const match = (dateFrom && dateTo)
+      ? { ativo, dataAdesao: { $gte: dateFrom, $lt: dateTo }}
+      : { ativo };
+  
+    const summaryQuery = await Contrato.aggregate([
+      {
+        $match: match
+      },
+      {
+        $group: {
+          _id: null,
+          maxValue: { $max: '$valor' },
+          minValue: { $min: '$valor' },
+          count: { $sum: 1 },
+          total: { $sum: '$valor' },
+        }
+      },
+      {
+        $project: {
+          _id: 0,
+          maxValue: 1,
+          minValue: 1,
+          total: 1,
+          count: 1,
+          total: 1,
+        }
+      }
+    ])
+    
+    const [ summary = {
+      maxValue: 0,
+      minValue: 0,
+      total: 0,
+      count: 0,
+      total: 0,
+    }] = summaryQuery;
+
+    res.json(summary)
+  } catch(error){
+    next(error)
+  }
+}
+
+
+
 module.exports = {
+  averageContratos,
   createContrato,
   updateContrato: updateContratoReq,
   getContratos,
