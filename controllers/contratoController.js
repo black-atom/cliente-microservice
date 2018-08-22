@@ -23,8 +23,7 @@ const deleteContrato = ( req, res, next ) => {
 
 const updateContrato = (contratoAntigo, novoContrato) => {
   const propostaAtivaDoContratoAntigo = contratoAntigo.propostas.find(proposta => proposta.ativo)
-  const propostaNova = novoContrato.propostas.find(proposta => proposta.ativo)
-
+  const propostaNova = novoContrato.propostas[0]
   const propostaCompare = equals(propostaAtivaDoContratoAntigo, propostaNova);
 
   if (!propostaCompare) {
@@ -42,6 +41,10 @@ const updateContrato = (contratoAntigo, novoContrato) => {
   };
 
   delete propostaNova._id;
+  contratoAntigo.propostas = contratoAntigo.propostas.map(proposta => {
+    proposta.ativo = false;
+    return proposta
+  })
   contratoAntigo.propostas.push(propostaNova);
 
   contratoAntigo.cnpjAssociados = novoContrato.cnpjAssociados || contratoAntigo.cnpjAssociados;
