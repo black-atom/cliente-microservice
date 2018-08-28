@@ -48,10 +48,13 @@ const updateContrato = (contratoAntigo, novoContrato) => {
   contratoAntigo.propostas.push(propostaNova);
 
   contratoAntigo.cnpjAssociados = novoContrato.cnpjAssociados || contratoAntigo.cnpjAssociados;
+  contratoAntigo.cliente = novoContrato.cliente || contratoAntigo.cliente;
+  contratoAntigo.endereco = novoContrato.endereco || contratoAntigo.endereco;
   contratoAntigo.contato = novoContrato.contato || contratoAntigo.contato;
   contratoAntigo.numeroContrato = novoContrato.numeroContrato || contratoAntigo.numeroContrato;
   contratoAntigo.resumoContrato = novoContrato.resumoContrato || contratoAntigo.resumoContrato;
   contratoAntigo.diaVencimento = novoContrato.diaVencimento || contratoAntigo.diaVencimento;
+  contratoAntigo.resumoContrato = novoContrato.resumoContrato || contratoAntigo.resumoContrato;
   contratoAntigo.subsequente = novoContrato.subsequente;
   contratoAntigo.tipo = novoContrato.tipo || contratoAntigo.tipo;
   contratoAntigo.dataAdesao = novoContrato.dataAdesao || contratoAntigo.dataAdesao;
