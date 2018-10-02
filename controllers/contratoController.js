@@ -23,8 +23,7 @@ const deleteContrato = ( req, res, next ) => {
 
 const updateContrato = (contratoAntigo, novoContrato) => {
   const propostaAtivaDoContratoAntigo = contratoAntigo.propostas.find(proposta => proposta.ativo)
-  const propostaNova = novoContrato.propostas.find(proposta => proposta.ativo)
-
+  const propostaNova = novoContrato.propostas[0]
   const propostaCompare = equals(propostaAtivaDoContratoAntigo, propostaNova);
 
   if (!propostaCompare) {
@@ -42,13 +41,20 @@ const updateContrato = (contratoAntigo, novoContrato) => {
   };
 
   delete propostaNova._id;
+  contratoAntigo.propostas = contratoAntigo.propostas.map(proposta => {
+    proposta.ativo = false;
+    return proposta
+  })
   contratoAntigo.propostas.push(propostaNova);
 
   contratoAntigo.cnpjAssociados = novoContrato.cnpjAssociados || contratoAntigo.cnpjAssociados;
+  contratoAntigo.cliente = novoContrato.cliente || contratoAntigo.cliente;
+  contratoAntigo.endereco = novoContrato.endereco || contratoAntigo.endereco;
   contratoAntigo.contato = novoContrato.contato || contratoAntigo.contato;
   contratoAntigo.numeroContrato = novoContrato.numeroContrato || contratoAntigo.numeroContrato;
   contratoAntigo.resumoContrato = novoContrato.resumoContrato || contratoAntigo.resumoContrato;
   contratoAntigo.diaVencimento = novoContrato.diaVencimento || contratoAntigo.diaVencimento;
+  contratoAntigo.resumoContrato = novoContrato.resumoContrato || contratoAntigo.resumoContrato;
   contratoAntigo.subsequente = novoContrato.subsequente;
   contratoAntigo.tipo = novoContrato.tipo || contratoAntigo.tipo;
   contratoAntigo.dataAdesao = novoContrato.dataAdesao || contratoAntigo.dataAdesao;
