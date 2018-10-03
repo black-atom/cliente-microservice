@@ -1,6 +1,7 @@
 const OrderCompra = require("../models/orderCompra");
 const Promise = require('bluebird');
 const moment = require('moment');
+const Stock = require("../models/estoque");
 
 const getOrderBuy = ( req, res, next ) => {
   const limit = req.query.limit ? parseInt(req.query.limit) : 0;
@@ -53,6 +54,28 @@ const createOrderBuy = async( req, res, next ) => {
     const orderBuy = req.body;
     const orderBuyInstance = new OrderCompra(orderBuy);
     const orderCreated = await orderBuyInstance.save();
+
+
+    if(orderCreated._id) {
+     const productsInsert = await Stock.insertMany(
+      orderCreated.products.map(
+          product => (
+            {
+              product: product.description,
+              productID: product.productID, 
+              quantity: product.quantity, 
+              createdAt: orderCreated.createdAt,
+              createdBy: orderCreated.createdBy,
+              updatedAt: orderCreated.updatedAt,
+              updatedBy: orderCreated.updatedBy,
+              originID: orderCreated._id,
+              origin: 'compra',
+              type: 'entrada',
+            }
+          )
+        )
+      )
+    }
     res.json(orderBuy);
   } catch (error) {
     next(error);
@@ -72,6 +95,28 @@ const updatedOrderBuy = async( req, res, next ) => {
         } 
       }
   );
+  const findOneBuy = await OrderCompra.findById({ _id });
+
+  if(findOneBuy) {
+    const productsInsert = await Stock.insertMany(
+      findOneBuy.products.map(
+        product => (
+          {
+            product: product.description,
+            productID: product.productID, 
+            quantity: -product.quantity, 
+            createdAt: findOneBuy.createdAt,
+            createdBy: findOneBuy.createdBy,
+            updatedAt: findOneBuy.updatedAt,
+            updatedBy: findOneBuy.updatedBy,
+            originID: findOneBuy._id,
+            origin: 'compra',
+            type: 'saida',
+          }
+        )
+      )
+     )
+   }
     res.json({});
   } catch (error) {
     next(error);

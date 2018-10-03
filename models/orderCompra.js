@@ -5,13 +5,13 @@ const userAudit = require('mongoose-useraudit-plugin');
 
 const produtoSchema  = new Schema({
     description: {type: String, required: [true, "Entre com o nome do produto"]},
-    idProduct: {type: String, required: [true, "Entre com o id do produto"]},
+    productID: {type: String, required: [true, "Entre com o id do produto"]},
     quantity: { type: Number, default: 1 },
 })
 
 const orderCompraSchema = new Schema({
     description: { type: String, default: "", required: [true, "Entre com a descrição da compra"]},
-    idBuy: { type: String, default: "", required: [true, "Entre com o id da compra"]},
+    buyID: { type: String, default: "", required: [true, "Entre com o id da compra"]},
     reason: { type: String, default: "" },
     status: { type: String, default: "finalizado" },
     products: {

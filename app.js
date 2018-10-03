@@ -15,9 +15,9 @@ const clienteRoute = require('./routes/clienteRoute');
 const contratoRoute = require('./routes/contratoRoute');
 const produtoRoute = require('./routes/produtoRoute');
 const orderBuyRoute = require('./routes/orderCompraRoute');
+const estoqueRoute = require('./routes/estoqueRoute.js');
 
 const app = express();
-
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -41,6 +41,7 @@ app.use(baseUri, clienteRoute);
 app.use(baseUri, contratoRoute);
 app.use(baseUri, produtoRoute);
 app.use(baseUri, orderBuyRoute);
+app.use(baseUri, estoqueRoute);
 
 app.use((err, req, res, next) => {
 	switch(err.name){
