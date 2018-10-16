@@ -14,6 +14,8 @@ const db = require("./databaseConnection");
 const clienteRoute = require('./routes/clienteRoute');
 const contratoRoute = require('./routes/contratoRoute');
 const produtoRoute = require('./routes/produtoRoute');
+const produtoDisponivelRoute = require('./routes/produtoDisponivelRoute');
+const produtoReservadoRoute = require('./routes/produtoReservadoRoute');
 const orderBuyRoute = require('./routes/orderCompraRoute');
 const estoqueRoute = require('./routes/estoqueRoute.js');
 
@@ -40,6 +42,8 @@ const baseUri = "/api";
 app.use(baseUri, clienteRoute);
 app.use(baseUri, contratoRoute);
 app.use(baseUri, produtoRoute);
+app.use(baseUri, produtoDisponivelRoute);
+app.use(baseUri, produtoReservadoRoute);
 app.use(baseUri, orderBuyRoute);
 app.use(baseUri, estoqueRoute);
 
