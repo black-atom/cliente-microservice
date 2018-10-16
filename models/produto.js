@@ -3,19 +3,13 @@ const timestamps = require('mongoose-timestamp');
 const dbConnection = require('../databaseConnection');
 const userAudit = require('mongoose-useraudit-plugin');
 
-const pecaSchema  = new Schema({
-  descricao: { type: String }, 
-  valor: { type: Number }, 
-})
-
 const produtoSchema = new Schema({
-  modelo: { type: String, required: [true, "Entre com modelo do produto"] },
-  descricao: { type: String, required: [true, "Entre com modelo do produto"] },
-  marca: { type: String, required: [true, "Entre com modelo do produto"] },
-  categoria: { type: String, enum: ["acessório","catraca", "acionador", "controle de acesso","relógio", "peça", "software"], required: [true, "Entre com a categoria!"] },
-  pecas: [pecaSchema],
-  valor: { type: Number, required: [true, "Entre com o valor do produto"], default: 0 },
-  imagemURL: { type: String, default: null },
+  description: { type: String, required: [true, "Entre com modelo do produto"] },
+  category: { type: String, enum: ["ACESSÓRIO","EQUIPAMENTO","SERVIÇO", "PEÇA", "SOFTWARE"], required: [true, "Entre com a categoria!"] },
+  brand: { type: String, required: [true, "Entre com modelo do produto"] },
+  serialControl: { type: Boolean, default: false, required: [true, "Entre com modelo do produto"] },
+  buyPrice: { type: Number, default: 0 },
+  sellPrice: { type: Number, default: 0 },
 }, { versionKey: false });
 
 produtoSchema.plugin(timestamps);
