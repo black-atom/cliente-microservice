@@ -1,6 +1,7 @@
-const OrderCompra = require("../models/orderCompra");
 const Promise = require('bluebird');
 const moment = require('moment');
+const AvailableProducts = require('../models/produto-disponivel');
+const OrderCompra = require("../models/orderCompra");
 const Stock = require("../models/estoque");
 
 const getOrderBuy = ( req, res, next ) => {
@@ -23,7 +24,10 @@ const getOrderBuy = ( req, res, next ) => {
     let valor;
     if(key === 'createdAt' || key === 'updatedAt') {
       valor = parseDate(search[key]);
-    }else {
+    }else if(key === '_id' || key === 'originID' || key === 'productID') {
+      valor = search[key];
+    }
+    else {
       valor = parseQueryRegExp(search[key]);
     }
     search = {
@@ -49,78 +53,94 @@ const getOneOrderBuy = async ( req, res, next ) => {
   }
 }
 
-const createOrderBuy = async( req, res, next ) => {
-  try {
-    const orderBuy = req.body;
-    const orderBuyInstance = new OrderCompra(orderBuy);
-    const orderCreated = await orderBuyInstance.save();
+const createOrderBuy = ( req, res, next ) => {
 
+  const dateNow = new Date();
+  const orderBuyFinished = async (orderBuy) => await OrderCompra.create(orderBuy);
+  const orderBuyWaitingFinish = async (orderBuy) => await OrderCompra.create({...orderBuy, status: 'aberto' });
+  const checkSerialControl = ({ products }) => products.find(product => product.serialControl);
 
-    if(orderCreated._id) {
-     const productsInsert = await Stock.insertMany(
-      orderCreated.products.map(
-          product => (
-            {
-              product: product.description,
-              productID: product.productID, 
-              quantity: product.quantity, 
-              createdAt: orderCreated.createdAt,
-              createdBy: orderCreated.createdBy,
-              updatedAt: orderCreated.updatedAt,
-              updatedBy: orderCreated.updatedBy,
-              originID: orderCreated._id,
-              origin: 'compra',
-              type: 'entrada',
-            }
-          )
-        )
-      )
-    }
-    res.json(orderBuy);
-  } catch (error) {
-    next(error);
-  }  
+  const createdOrderBuy = orderBuy => checkSerialControl(orderBuy)
+    ? orderBuyWaitingFinish(orderBuy) : orderBuyFinished(orderBuy) 
+
+  const parseStock = orderBuyCreated => 
+  orderBuyCreated.products
+    .filter(product => !product.serialControl)
+    .map(product => ({
+      description: product.description,
+      productID: product.productID, 
+      serialControl: product.serialControl,
+      quantity: product.quantity, 
+      baseStock: product.baseStock, 
+      createdAt: dateNow,
+      updatedAt: dateNow,
+      createdBy: orderBuyCreated.createdBy,
+      updatedBy: orderBuyCreated.updatedBy,
+      originID: orderBuyCreated._id,
+      origin: 'compra',
+      type: 'entrada',
+    }));
+
+  const saveProductsStock = async (products) => await Stock.insertMany(products)
+
+  Promise.resolve(req.body)
+    .then(createdOrderBuy)
+    .then(parseStock)
+    .then(saveProductsStock)
+    .then(response => res.json(response))
+    .catch(error => next(error))
 }
 
 const updatedOrderBuy = async( req, res, next ) => {
-  try {
-    const _id = req.params.id
-    const reason = req.body.reason;
-    const orderBuyUpdated = await OrderCompra.update(
+  const dateNow = new Date();
+
+  const _id = req.params.id
+  const orderBody = req.body;  
+
+  const updatedOrder = async (_id) => 
+    await OrderCompra.findOneAndUpdate(
       { _id }, 
       { 
-        $set: { 
-          reason: reason, 
-          status: 'cancelado'
-        } 
-      }
-  );
-  const findOneBuy = await OrderCompra.findById({ _id });
+        $set: { ...orderBody, status: 'cancelado' } 
+      }, 
+      { new: true } 
+    )
 
-  if(findOneBuy) {
-    const productsInsert = await Stock.insertMany(
-      findOneBuy.products.map(
-        product => (
-          {
-            product: product.description,
-            productID: product.productID, 
-            quantity: -product.quantity, 
-            createdAt: findOneBuy.createdAt,
-            createdBy: findOneBuy.createdBy,
-            updatedAt: findOneBuy.updatedAt,
-            updatedBy: findOneBuy.updatedBy,
-            originID: findOneBuy._id,
-            origin: 'compra',
-            type: 'saida',
-          }
-        )
-      )
-     )
-   }
-    res.json({});
-  } catch (error) {
-    next(error);
-  }  
+  const checkOutProductsStock = async (products) => await Stock.insertMany(products);
+
+  const removeProducstAvailable = async(orderBuy) => {
+    try {
+      await AvailableProducts.deleteMany({ originID: _id })
+      return orderBuy.products
+    } catch (error) {
+      return error
+    }
+  }
+
+  const findOrderUpdated = async (checkOut) => await OrderCompra.findById({ _id: checkOut[0].originID })
+
+  const parseStockCheckOut = product => ({
+    description: product.description,
+    productID: product.productID, 
+    quantity: -product.quantity, 
+    baseStock: product.baseStock, 
+    createdAt: dateNow,
+    createdBy: req.body.createdBy,
+    updatedAt: dateNow,
+    updatedBy: req.body.updatedBy,
+    originID: _id,
+    origin: 'compra',
+    type: 'saida',
+  })
+
+  Promise.resolve(_id)
+    .then(updatedOrder)
+    .then(removeProducstAvailable)
+    .map(parseStockCheckOut)
+    .then(checkOutProductsStock)
+    .then(findOrderUpdated)
+    .then(response => res.json(response))
+    .catch(error => next(error))
 }
 
 module.exports = {
