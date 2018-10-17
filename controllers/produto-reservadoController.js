@@ -58,7 +58,7 @@ const updateProductReserved = (req, res, next) => {
     description: product.description,
     productID: product.productID, 
     serialControl: product.serialControl,
-    quantity: product.status === 'baixado' ? -product.quantity : product.quantity,
+    quantity: product.status === 'liberado' ? -product.quantity : product.quantity,
     baseStock: product.baseStock, 
     createdAt: new Date(),
     updatedAt: new Date(),
@@ -66,7 +66,7 @@ const updateProductReserved = (req, res, next) => {
     updatedBy: product.updatedBy,
     originID: product.originID,
     origin: product.origin,
-    type: product.status === 'baixado' ? product.type : 'entrada',
+    type: product.status === 'liberado' ? product.type : 'entrada',
   });
 
   const createTransactionStock = async (product) => await Stock.create(parseStock(product))
@@ -77,6 +77,7 @@ const updateProductReserved = (req, res, next) => {
     .then(createTransactionStock)
     .then(response => res.json(response))
     .catch(error => next(error))
+    res.json({})
 }
 
 const getAllProductsReservedByOriginID = async (req, res, next) => {
