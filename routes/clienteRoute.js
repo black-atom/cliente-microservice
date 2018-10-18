@@ -10,5 +10,4 @@ route.put("/clientes/:id", rolesMiddleware(['cadastro', 'administrador']), clien
 route.delete("/clientes/:clienteId/enderecos/:enderecoId", rolesMiddleware(['cadastro', 'administrador']), clienteController.removeEndereco);
 route.delete("/clientes/:clienteId/contatos/:contatoId", rolesMiddleware(['cadastro', 'administrador']), clienteController.removeContato);
 
-
 module.exports = route;

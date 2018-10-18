@@ -18,6 +18,7 @@ const produtoDisponivelRoute = require('./routes/produtoDisponivelRoute');
 const produtoReservadoRoute = require('./routes/produtoReservadoRoute');
 const orderBuyRoute = require('./routes/orderCompraRoute');
 const estoqueRoute = require('./routes/estoqueRoute.js');
+const mercadoLivreRoute = require('./routes/mercadoLivreRoute');
 
 const app = express();
 
@@ -46,6 +47,7 @@ app.use(baseUri, produtoDisponivelRoute);
 app.use(baseUri, produtoReservadoRoute);
 app.use(baseUri, orderBuyRoute);
 app.use(baseUri, estoqueRoute);
+app.use(baseUri, mercadoLivreRoute);
 
 app.use((err, req, res, next) => {
 	switch(err.name){
