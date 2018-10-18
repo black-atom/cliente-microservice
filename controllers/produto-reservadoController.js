@@ -38,7 +38,7 @@ const updateProductReserved = (req, res, next) => {
 
   const updatedProductReserved = async (product) => {
     await ProductReserved.update(
-      { _id }, { $set: { status: product.statusProductReserved }}
+      { _id }, { $set: { status: product.status }}
     );
     return product;
   }
@@ -52,7 +52,8 @@ const updateProductReserved = (req, res, next) => {
     return findProductReserved(_id)
   }
   const checkSerialControl = product => 
-    product.serialControl ? updatedProductAvailable(product) : findProductReserved(_id);
+   ( product.serialControl && product.status === 'liberado' ||  product.serialControl && product.status === 'estorno')
+    ? updatedProductAvailable(product) : findProductReserved(_id);
 
   const parseStock = product => ({
     description: product.description,

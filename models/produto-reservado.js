@@ -14,7 +14,19 @@ const produtoSchema = new Schema({
   baseStock:  { type: String, default: "", required: [true, "Entre com o base do estoque da compra"]},
   dateOut:  { type: String, default: "", required: [true, "Entre com o base do estoque da compra"]},
   origin: { type: String, enum: ["mercado livre", "atendimento"], required: [true, "Entre com a origem do evento"]},
-  status: { type: String, enum: ["reservado", "separado", "liberado", "estorno", "cancelado"], required: [true, "Entre com a origem do evento"]},
+  status: { 
+    type: String, 
+    enum: [
+      "reservado",
+      "separado",
+      "liberado",
+      "estorno",
+      "cancelado",
+      "técnico perdeu o item",
+      "técnico quebrou o item"
+    ], 
+    required: [true, "Entre com a origem do evento"]
+  },
 }, { versionKey: false });
 
 produtoSchema.plugin(timestamps);
