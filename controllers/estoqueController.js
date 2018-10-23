@@ -2,6 +2,7 @@ const Stock = require("../models/estoque");
 const OrderBuy = require("../models/orderCompra");
 const ProductsAvailables = require("../models/produto-disponivel");
 const Promise = require('bluebird');
+const StockService = require('../services/stock')
 
 const getAllTransactions = async (req, res, next) => {
 	const limit = req.query.limit ? parseInt(req.query.limit) : 0;
@@ -92,8 +93,6 @@ const saveProductsSerial = async (req, res, next) => {
 		return stockProductArray
 	}
 
-	const inserirProductsEstoque = async products => await Stock.insertMany(products);
-
 	const checkProductsStockAndProductsOrder = async (productsCreatedStock) => {
 		const _id = productsCreatedStock[0].originID;
 		const findProductsOrder = await OrderBuy.findById({ _id })
@@ -114,7 +113,7 @@ const saveProductsSerial = async (req, res, next) => {
 		.then(cadastrarDisponiveis)
 		.then(formatToStock)
 		.then(productsObjectToProductsArray)
-		.then(inserirProductsEstoque)
+		.map(StockService.insertItem)
 		.then(checkProductsStockAndProductsOrder)
 		.then(response => res.json(response))
 		.catch(error => next(error))

@@ -1,6 +1,6 @@
 const ProductsAvaiables = require("../models/produto-disponivel");
 const ProductReserved = require("../models/produto-reservado");
-const Stock = require("../models/estoque");
+const StockService = require("../services/stock")
 
 const Promise = require('bluebird');
 
@@ -70,7 +70,7 @@ const updateProductReserved = (req, res, next) => {
     type: product.status === 'liberado' ? product.type : 'entrada',
   });
 
-  const createTransactionStock = async (product) => await Stock.create(parseStock(product))
+  const createTransactionStock = async (product) => await StockService.insertItem(parseStock(product))
 
   Promise.resolve(body)
     .then(updatedProductReserved)

@@ -2,7 +2,7 @@ const Promise = require('bluebird');
 const moment = require('moment');
 const AvailableProducts = require('../models/produto-disponivel');
 const OrderCompra = require("../models/orderCompra");
-const Stock = require("../models/estoque");
+const StockService = require("../services/stock");
 
 const getOrderBuy = ( req, res, next ) => {
   const limit = req.query.limit ? parseInt(req.query.limit) : 0;
@@ -81,12 +81,10 @@ const createOrderBuy = ( req, res, next ) => {
       type: 'entrada',
     }));
 
-  const saveProductsStock = async (products) => await Stock.insertMany(products)
-
   Promise.resolve(req.body)
     .then(createdOrderBuy)
     .then(parseStock)
-    .then(saveProductsStock)
+    .map(StockService.insertItem)
     .then(response => res.json(response))
     .catch(error => next(error))
 }
@@ -105,8 +103,6 @@ const updatedOrderBuy = async( req, res, next ) => {
       }, 
       { new: true } 
     )
-
-  const checkOutProductsStock = async (products) => await Stock.insertMany(products);
 
   const removeProducstAvailable = async(orderBuy) => {
     try {
@@ -137,7 +133,7 @@ const updatedOrderBuy = async( req, res, next ) => {
     .then(updatedOrder)
     .then(removeProducstAvailable)
     .map(parseStockCheckOut)
-    .then(checkOutProductsStock)
+    .map(StockService.insertItem)
     .then(findOrderUpdated)
     .then(response => res.json(response))
     .catch(error => next(error))
