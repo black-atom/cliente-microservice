@@ -11,6 +11,7 @@ const produtoSchema = new Schema({
   serialControl: { type: Boolean, default: false, required: [true, "Entre com modelo do produto"] },
   buyPrice: { type: Number, default: 0 },
   sellPrice: { type: Number, default: 0 },
+  quantity: { type: Number, default: 0 },
 }, { versionKey: false });
 
 produtoSchema.plugin(timestamps);
