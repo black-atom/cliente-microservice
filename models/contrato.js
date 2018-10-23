@@ -50,12 +50,10 @@ const clienteSchema = new Schema({
 const equipamentoSchema  = new Schema({
   descricao        : { type: String, default: '', required: [true, 'Entre com o descricao!']                 },
   categoria        : { type: String, default: '', required: [true, 'Entre com o categoria!']                 },
-  modelo           : { type: String, default: '', required: [true, 'Entre com o modelo!']                    },
   fabricante       : { type: String, default: '', required: [true, 'Entre com o fabricante!']                },
   numeroSerie      : { type: String, default: ''                                                             },
   cnpjCliente      : { type: String, default: ''                                                             },
   motivo           : { type: String, default: ''                                                             },
-  imagemPath       : { type: String, defalut: ''                                                             },
   encerradoEm      : { type: Schema.Types.Date, default: null                                                },
   visita           : { type: Boolean, default: false, required: [true, 'Entre com informação da visita!']    },
   valor            : { type: Number, default: 0, required: [true, 'Entre com valor equipamento!']            },

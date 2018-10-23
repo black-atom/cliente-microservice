@@ -8,6 +8,5 @@ route.post("/produtos", rolesMiddleware(['cadastro', 'administrador']), produtoC
 route.get("/produtos", rolesMiddleware(['all']), produtoController.getProdutos);
 route.get("/produtos/:id", rolesMiddleware(['all']), produtoController.getProduto);
 route.put("/produtos/:id", rolesMiddleware(['cadastro', 'administrador']), produtoController.updateProduto);
-route.post("/produtos/:id/imagem", getUploadHandler(productStorageConfig), produtoController.uploadImagemProduto)
 
 module.exports = route;
