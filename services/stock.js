@@ -2,28 +2,30 @@ const StockModel = require('../models/estoque')
 const { updateProductQuantity } = require('./product')
 
 /**
- * Returns the quantity of a given product id
- * @param {} id 
+ * Returns the quantity of a given product id and the baseStock
+ * @param {} id the product id
+ * @param {} baseStock  name of the stock
  * @returns 10
  */
-const getProductQuantityById = async ( id ) => {
-  const [{ quantity }] = await StockModel.aggregate([
+const getProductQuantityById = async ( id, baseStock ) => {
+  const [{ quantity = 0 } = {}] = await StockModel.aggregate([
     {
       $match: {
         productID: id,
+        baseStock,
       }
     },
     {
       $group: {
         _id: "$productID",
-        quantity: { $sum: "$quantity" }
+        quantity: { $sum: "$quantity" },
       }
     },
     {
       $project: {
         _id: 0,
         productID: "$_id",
-        quantity: 1
+        quantity: 1,
       }
     }
   ])
@@ -34,20 +36,21 @@ const getProductQuantityById = async ( id ) => {
 /**
  * Returns the quantity of each product 
  * @param {} id 
- * @returns [{ quantity: 19, productID: '5bc8866910fbcd000141da0d' }]
+ * @returns [{ quantity: 19, productID: '5bc8866910fbcd000141da0d', baseStock: 'realponto' }]
  */
-const getAllProductQuantity = async () => {
+const getAllProductQuantityByStock = async () => {
   const list = await StockModel.aggregate([
     {
       $group: {
-        _id: "$productID",
+        _id: { productID: "$productID", baseStock: "$baseStock" },
         quantity: { $sum: "$quantity" }
       }
     },
     {
       $project: {
         _id: 0,
-        productID: "$_id",
+        productID: "$_id.productID",
+        baseStock: "$_id.baseStock",
         quantity: 1
       }
     }
@@ -70,13 +73,13 @@ const getAllProductQuantity = async () => {
  */
 const insertItem = async (stockItem) => {
   const savedStockItem = await StockModel.create(stockItem)
-  await updateProductQuantity(stockItem.productID, stockItem.quantity)
+  await updateProductQuantity(stockItem.productID, stockItem.quantity, stockItem.baseStock)
 
   return savedStockItem
 }
 
 module.exports = {
   getProductQuantityById,
-  getAllProductQuantity,
+  getAllProductQuantityByStock,
   insertItem,
 }
