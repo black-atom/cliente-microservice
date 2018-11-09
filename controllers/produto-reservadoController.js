@@ -1,6 +1,7 @@
 const ProductsAvaiables = require("../models/produto-disponivel");
 const ProductReserved = require("../models/produto-reservado");
 const StockService = require("../services/stock")
+const moment = require('moment')
 
 const Promise = require('bluebird');
 
@@ -91,7 +92,15 @@ const getAllProductsReservedByOriginID = async (req, res, next) => {
 }
 
 const getAllDateOut = async (req, res, next) => {
-  const query = req.query;
+  const momentDate = moment(req.query.dateOut)
+
+  const query = ({
+    dateOut: {
+      $gte: momentDate.startOf('day').toISOString(),
+      $lte: momentDate.endOf('day').toISOString()
+    },
+  })
+  
   try {
     const response = await ProductReserved.find(query)
     res.json(response);
