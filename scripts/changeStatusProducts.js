@@ -1,5 +1,3 @@
-const mongoose = require('mongoose')
-mongoose.connect('mongodb://localhost/test')
 const ProductsAvailables = require("../models/produto-disponivel");
 
 ProductsAvailables.updateMany(
