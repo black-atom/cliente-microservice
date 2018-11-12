@@ -1,9 +1,8 @@
 const mongoose = require('mongoose')
 mongoose.connect('mongodb://localhost/test')
+const ProductsAvailables = require("../models/produto-disponivel");
 
-const ProductAvailable = mongoose.model('produtosdisponiveis')
-
-ProductAvailable.updateMany(
+ProductsAvailables.updateMany(
   { status: 'pre-reservado'},
   { $set: { status : 'disponivel' } }
 ).then(res => console.log(res))
