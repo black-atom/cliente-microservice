@@ -59,7 +59,7 @@ const updateProductReserved = (req, res, next) => {
     description: product.description,
     productID: product.productID, 
     serialControl: product.serialControl,
-    quantity: product.status === 'liberado' ? -product.quantity : product.quantity,
+    quantity: product.status === 'liberado' ? (product.quantity * -1) : product.quantity,
     baseStock: product.baseStock, 
     createdAt: new Date(),
     updatedAt: new Date(),
@@ -78,7 +78,6 @@ const updateProductReserved = (req, res, next) => {
     .then(createTransactionStock)
     .then(response => res.json(response))
     .catch(error => next(error))
-    res.json({})
 }
 
 const getAllProductsReservedByOriginID = async (req, res, next) => {
