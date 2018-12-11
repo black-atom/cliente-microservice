@@ -93,6 +93,7 @@ const contratoSchema = new Schema({
   propostas         : [propostaSchema],
   financeiro        : [financeiroSchema],
   ativo             : { type: Boolean, default: true, required: [true, 'Situação do contrato!']                        },
+  isInDebt          : { type: Boolean, default: false, required: [true, 'contrato com debito!']                        },
   deletedAt         : { type: Date, default: null }
 }, { versionKey: false, usePushEach: true })
 

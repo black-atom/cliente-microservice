@@ -6,7 +6,7 @@ route.post("/contratos", rolesMiddleware(['cadastro', 'administrador']), contrat
 route.get("/contratos", rolesMiddleware(['all']), contratoController.getContratos);
 route.get("/contratos/summary", rolesMiddleware(['all']), contratoController.averageContratos);
 route.get("/contratos/:id", rolesMiddleware(['all']), contratoController.getContrato);
-route.put("/contratos/:id", rolesMiddleware(['cadastro', 'administrador']), contratoController.updateContrato);
+route.put("/contratos/:id", rolesMiddleware(['cadastro', 'administrador', 'tecnica']), contratoController.updateContrato);
 route.delete("/contratos/:id", rolesMiddleware(['cadastro', 'administrador']), contratoController.deleteContrato);
 
 module.exports = route;
