@@ -61,6 +61,7 @@ const updateContrato = (contratoAntigo, novoContrato) => {
   contratoAntigo.dataEncerramento = novoContrato.dataEncerramento || contratoAntigo.dataEncerramento;
   contratoAntigo.valor = novoContrato.valor || contratoAntigo.valor;
   contratoAntigo.ativo = novoContrato.ativo;
+  contratoAntigo.isInDebt = novoContrato.isInDebt;
 
   return contratoAntigo.save({ new: true })
 }
@@ -110,6 +111,7 @@ const getContratos = (req, res, next ) => {
     dataEncerramento: 1,
     valor: 1,
     tipo: 1,
+    isInDebt: 1,
   };
 
   let search = req.query.search ? JSON.parse(req.query.search) : {};
