@@ -1,6 +1,17 @@
 const Cliente = require("../models/cliente");
 const {defaultTo, prop, clone} = require("ramda");
 const Promise = require('bluebird');
+const Contrato = require("../models/contrato");
+
+
+const updateContratoByCNPJ = async (cnpjCpf, cliente) => {
+    await Contrato.updateOne({
+        'cliente.cnpj_cpf': cnpjCpf,
+    }, {
+        cliente,
+    })
+}
+
 const createCliente = ( req, res, next ) => {
 
     const cliente = defaultTo({}, req.body);
@@ -85,14 +96,18 @@ const getOneClient = ( req, res, next ) => {
 
 }
 
-const updateCliente =  ( req, res, next ) => {
+const updateCliente =  async ( req, res, next ) => {
     const id = prop("id", req.params);
     const clienteData = clone(req.body);
 
-    Cliente.findByIdAndUpdate(id, clienteData, {new: true})
-    .then( cliente => res.json(cliente))
-    .catch( error => next(error) )
+    try {
+        const cliente = await Cliente.findByIdAndUpdate(id, clienteData, {new: true})
+        await updateContratoByCNPJ(cliente.cnpj_cpf, cliente)
 
+        res.json(cliente)
+    } catch (error) {
+        next(error)
+    }
 }
 
 const removeEndereco =  ( req, res, next ) => {
