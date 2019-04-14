@@ -133,6 +133,14 @@ const getContratos = (req, res, next ) => {
     search.deletedAt = null
   }
 
+  if(search.hasOwnProperty('isDebt')) {
+    search.isInDebt = (search.isInDebt === 'true') ? true : false
+  }
+
+  if(search.hasOwnProperty('ativo')) {
+    search.ativo = (search.ativo === 'true') ? true : false
+  }
+
   Promise.all([
     Contrato.find(search, resultContrato).sort(sort).skip(skip).limit(limit).exec(),
     Contrato.find(search).count().exec()
