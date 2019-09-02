@@ -153,16 +153,15 @@ const averageContratos = async(req, res, next) => {
   try {
     const {
       ativo: ativoQuery,
-      dateFrom,
-      dateTo,
+      tipo,
     } = req.query;
-    
+
     const ativo = ativoQuery === 'true' ? true : false
-  
-    const match = (dateFrom && dateTo)
-      ? { ativo, deletedAt: null, dataAdesao: { $gte: dateFrom, $lt: dateTo }}
+
+    const match = (tipo)
+      ? { ativo, deletedAt: null, tipo }
       : { ativo, deletedAt: null };
-  
+
     const summaryQuery = await Contrato.aggregate([
       {
         $match: match
@@ -187,7 +186,7 @@ const averageContratos = async(req, res, next) => {
         }
       }
     ])
-    
+
     const [ summary = {
       maxValue: 0,
       minValue: 0,
