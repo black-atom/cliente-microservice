@@ -120,7 +120,7 @@ const getContratos = (req, res, next ) => {
 
   for(prop in search) {
     let valor = search[prop];
-    if(prop.indexOf('data') > - 1 !== true){
+    if(prop.indexOf('data') === - 1 || prop.indexOf('valor') === -1){
       valor = parseQueryRegExp(valor);
     }
     search = {
